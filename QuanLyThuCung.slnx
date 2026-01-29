@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="QuanLyThuCung.App/QuanLyThuCung.App.csproj" />
+  <Project Path="QuanLyThuCung.Core/QuanLyThuCung.Core.csproj" />
+</Solution>
