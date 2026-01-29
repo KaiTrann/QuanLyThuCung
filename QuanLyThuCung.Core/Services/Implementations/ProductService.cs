@@ -29,6 +29,17 @@ namespace QuanLyThuCung.Core.Services.Implementations
 
         public void AddProduct(Product product)
         {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+            if (string.IsNullOrWhiteSpace(product.Name))
+                throw new ArgumentException("Product name is required", nameof(product));
+            if (string.IsNullOrWhiteSpace(product.Category))
+                throw new ArgumentException("Product category is required", nameof(product));
+            if (product.Price < 0)
+                throw new ArgumentException("Product price cannot be negative", nameof(product));
+            if (product.StockQuantity < 0)
+                throw new ArgumentException("Product stock quantity cannot be negative", nameof(product));
+                
             product.Id = _nextId++;
             product.DateAdded = DateTime.Now;
             _products.Add(product);
@@ -36,12 +47,15 @@ namespace QuanLyThuCung.Core.Services.Implementations
 
         public void UpdateProduct(Product product)
         {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+                
             var existingProduct = GetProductById(product.Id);
-            if (existingProduct != null)
-            {
-                var index = _products.IndexOf(existingProduct);
-                _products[index] = product;
-            }
+            if (existingProduct == null)
+                throw new InvalidOperationException($"Product with ID {product.Id} not found");
+                
+            var index = _products.IndexOf(existingProduct);
+            _products[index] = product;
         }
 
         public void DeleteProduct(int id)
@@ -56,10 +70,13 @@ namespace QuanLyThuCung.Core.Services.Implementations
         public void UpdateStock(int productId, int quantity)
         {
             var product = GetProductById(productId);
-            if (product != null)
-            {
-                product.StockQuantity += quantity;
-            }
+            if (product == null)
+                throw new InvalidOperationException($"Product with ID {productId} not found");
+                
+            if (product.StockQuantity + quantity < 0)
+                throw new InvalidOperationException("Insufficient stock quantity");
+                
+            product.StockQuantity += quantity;
         }
 
         public List<Product> SearchProducts(string keyword)
@@ -67,7 +84,7 @@ namespace QuanLyThuCung.Core.Services.Implementations
             return _products.Where(p =>
                 p.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
                 p.Category.Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
-                p.Description.Contains(keyword, StringComparison.OrdinalIgnoreCase)
+                (p.Description?.Contains(keyword, StringComparison.OrdinalIgnoreCase) ?? false)
             ).ToList();
         }
     }

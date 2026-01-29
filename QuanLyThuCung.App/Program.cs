@@ -369,7 +369,7 @@ namespace QuanLyThuCung.App
 
         static void ManageOrders(OrderService orderService, CustomerService customerService, ProductService productService)
         {
-            Console.WriteLine("\n═══ QUẢN LÝ ĐỐN HÀNG (ORDER MANAGEMENT) ═══");
+            Console.WriteLine("\n═══ QUẢN LÝ ĐƠN HÀNG (ORDER MANAGEMENT) ═══");
             Console.WriteLine("1. Xem tất cả đơn hàng (View all orders)");
             Console.WriteLine("2. Tạo đơn hàng mới (Create new order)");
             Console.Write("Chọn: ");

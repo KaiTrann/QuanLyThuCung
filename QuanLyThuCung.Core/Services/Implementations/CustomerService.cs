@@ -23,6 +23,15 @@ namespace QuanLyThuCung.Core.Services.Implementations
 
         public void AddCustomer(Customer customer)
         {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+            if (string.IsNullOrWhiteSpace(customer.Name))
+                throw new ArgumentException("Customer name is required", nameof(customer));
+            if (string.IsNullOrWhiteSpace(customer.Email))
+                throw new ArgumentException("Customer email is required", nameof(customer));
+            if (string.IsNullOrWhiteSpace(customer.Phone))
+                throw new ArgumentException("Customer phone is required", nameof(customer));
+                
             customer.Id = _nextId++;
             customer.DateRegistered = DateTime.Now;
             _customers.Add(customer);
@@ -30,12 +39,15 @@ namespace QuanLyThuCung.Core.Services.Implementations
 
         public void UpdateCustomer(Customer customer)
         {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+                
             var existingCustomer = GetCustomerById(customer.Id);
-            if (existingCustomer != null)
-            {
-                var index = _customers.IndexOf(existingCustomer);
-                _customers[index] = customer;
-            }
+            if (existingCustomer == null)
+                throw new InvalidOperationException($"Customer with ID {customer.Id} not found");
+                
+            var index = _customers.IndexOf(existingCustomer);
+            _customers[index] = customer;
         }
 
         public void DeleteCustomer(int id)

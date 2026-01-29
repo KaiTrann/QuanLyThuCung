@@ -28,6 +28,17 @@ namespace QuanLyThuCung.Core.Services.Implementations
 
         public void AddPet(Pet pet)
         {
+            if (pet == null)
+                throw new ArgumentNullException(nameof(pet));
+            if (string.IsNullOrWhiteSpace(pet.Name))
+                throw new ArgumentException("Pet name is required", nameof(pet));
+            if (string.IsNullOrWhiteSpace(pet.Species))
+                throw new ArgumentException("Pet species is required", nameof(pet));
+            if (pet.Price < 0)
+                throw new ArgumentException("Pet price cannot be negative", nameof(pet));
+            if (pet.Age < 0)
+                throw new ArgumentException("Pet age cannot be negative", nameof(pet));
+                
             pet.Id = _nextId++;
             pet.DateAdded = DateTime.Now;
             _pets.Add(pet);
@@ -35,12 +46,15 @@ namespace QuanLyThuCung.Core.Services.Implementations
 
         public void UpdatePet(Pet pet)
         {
+            if (pet == null)
+                throw new ArgumentNullException(nameof(pet));
+                
             var existingPet = GetPetById(pet.Id);
-            if (existingPet != null)
-            {
-                var index = _pets.IndexOf(existingPet);
-                _pets[index] = pet;
-            }
+            if (existingPet == null)
+                throw new InvalidOperationException($"Pet with ID {pet.Id} not found");
+                
+            var index = _pets.IndexOf(existingPet);
+            _pets[index] = pet;
         }
 
         public void DeletePet(int id)

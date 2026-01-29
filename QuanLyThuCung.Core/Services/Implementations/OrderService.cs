@@ -28,6 +28,11 @@ namespace QuanLyThuCung.Core.Services.Implementations
 
         public void CreateOrder(Order order)
         {
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+            if (order.OrderItems == null || order.OrderItems.Count == 0)
+                throw new ArgumentException("Order must contain at least one item", nameof(order));
+                
             order.Id = _nextId++;
             order.OrderDate = DateTime.Now;
             order.TotalAmount = CalculateOrderTotal(order);
@@ -36,27 +41,30 @@ namespace QuanLyThuCung.Core.Services.Implementations
 
         public void UpdateOrder(Order order)
         {
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+                
             var existingOrder = GetOrderById(order.Id);
-            if (existingOrder != null)
-            {
-                order.TotalAmount = CalculateOrderTotal(order);
-                var index = _orders.IndexOf(existingOrder);
-                _orders[index] = order;
-            }
+            if (existingOrder == null)
+                throw new InvalidOperationException($"Order with ID {order.Id} not found");
+                
+            order.TotalAmount = CalculateOrderTotal(order);
+            var index = _orders.IndexOf(existingOrder);
+            _orders[index] = order;
         }
 
         public void CancelOrder(int id)
         {
             var order = GetOrderById(id);
-            if (order != null)
-            {
-                order.Status = "Cancelled";
-            }
+            if (order == null)
+                throw new InvalidOperationException($"Order with ID {id} not found");
+                
+            order.Status = "Cancelled";
         }
 
         public decimal CalculateOrderTotal(Order order)
         {
-            return order.OrderItems.Sum(item => item.Subtotal);
+            return order.OrderItems?.Sum(item => item.Subtotal) ?? 0;
         }
     }
 }
