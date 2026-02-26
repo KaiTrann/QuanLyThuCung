@@ -1,0 +1,195 @@
+﻿<Window x:Class="Nhóm_7.Schedule"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Quản lý Lịch hẹn &amp; Tiêm phòng"
+        Height="720"
+        Width="1000"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="10">
+        <TabControl>
+
+            <!-- ================= TAB 1: LỊCH HẸN ================= -->
+            <TabItem Header="Lịch hẹn">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- FORM -->
+                    <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+
+                        <StackPanel Margin="5">
+                            <TextBlock Text="Thú cưng"/>
+                            <TextBox x:Name="txtPetAppointment" Width="120"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="5">
+                            <TextBlock Text="Ngày hẹn"/>
+                            <DatePicker x:Name="dpAppointmentDate" Width="140"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="5">
+                            <TextBlock Text="Lý do"/>
+                            <TextBox x:Name="txtReason" Width="150"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="5">
+                            <TextBlock Text="Trạng thái"/>
+                            <ComboBox x:Name="cbStatus" Width="120">
+                                <ComboBoxItem Content="đang làm"/>
+                                <ComboBoxItem Content="đang đợi"/>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <Button Content="Thêm" Width="70" Margin="10"
+                                Click="AddAppointment_Click"/>
+                        <Button Content="Sửa" Width="70" Margin="5"
+                                Click="EditAppointment_Click"/>
+                        <Button Content="Xóa" Width="70" Margin="5"
+                                Click="DeleteAppointment_Click"/>
+                    </StackPanel>
+
+                    <!-- TÌM KIẾM -->
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0 0 0 10">
+                        <TextBlock Text="Tìm thú cưng:" VerticalAlignment="Center"/>
+                        <TextBox x:Name="txtSearchAppointment" Width="150" Margin="5"/>
+                        <Button Content="Tìm" Width="80"
+                                Click="SearchAppointment_Click"/>
+                        <Button Content="Tất cả" Width="80" Margin="5"
+                                Click="ShowAllAppointment_Click"/>
+                    </StackPanel>
+
+                    <!-- THỐNG KÊ -->
+                    <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0 0 0 10">
+
+                        <TextBlock Text="Chọn ngày:" VerticalAlignment="Center"/>
+                        <DatePicker x:Name="dpFilterDate" Width="150" Margin="5"/>
+
+                        <Button Content="Thống kê"
+                                Width="100"
+                                Click="CountByDate_Click"/>
+
+                        <Button Content="Hôm nay"
+                                Width="90"
+                                Margin="5"
+                                Click="CountToday_Click"/>
+
+                        <TextBlock x:Name="txtResultCount"
+                                   FontWeight="Bold"
+                                   Foreground="Blue"
+                                   Margin="15 0 0 0"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- DATA -->
+                    <DataGrid x:Name="dgAppointments"
+                              Grid.Row="3"
+                              AutoGenerateColumns="False"
+                              CanUserAddRows="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Thú cưng" Binding="{Binding Pet}"/>
+                            <DataGridTextColumn Header="Ngày hẹn" Binding="{Binding Date}"/>
+                            <DataGridTextColumn Header="Lý do" Binding="{Binding Reason}"/>
+                            <DataGridTextColumn Header="Trạng thái" Binding="{Binding Status}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                </Grid>
+            </TabItem>
+
+            <!-- ================= TAB 2: TIÊM PHÒNG ================= -->
+            <TabItem Header="Tiêm phòng">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- FORM -->
+                    <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+
+                        <StackPanel Margin="5">
+                            <TextBlock Text="Thú cưng"/>
+                            <TextBox x:Name="txtPetVaccine" Width="120"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="5">
+                            <TextBlock Text="Tên vắc-xin"/>
+                            <TextBox x:Name="txtVaccineName" Width="150"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="5">
+                            <TextBlock Text="Ngày tiêm"/>
+                            <DatePicker x:Name="dpVaccineDate" Width="130"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="5">
+                            <TextBlock Text="Hạn tiếp theo"/>
+                            <DatePicker x:Name="dpNextDueDate" Width="130"/>
+                        </StackPanel>
+
+                        <Button Content="Thêm" Width="90" Margin="10"
+                                Click="AddVaccine_Click"/>
+                        <Button Content="Sửa" Width="90" Margin="5"
+                                Click="EditVaccine_Click"/>
+                        <Button Content="Xóa" Width="90" Margin="5"
+                                Click="DeleteVaccine_Click"/>
+                    </StackPanel>
+
+                    <!-- TÌM KIẾM -->
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0 0 0 10">
+                        <TextBlock Text="Tìm thú cưng:" VerticalAlignment="Center"/>
+                        <TextBox x:Name="txtSearchVaccine" Width="150" Margin="5"/>
+                        <Button Content="Tìm" Width="80"
+                                Click="SearchVaccine_Click"/>
+                        <Button Content="Tất cả" Width="80" Margin="5"
+                                Click="ShowAllVaccine_Click"/>
+                    </StackPanel>
+
+                    <!-- THỐNG KÊ -->
+                    <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0 0 0 10">
+
+                        <TextBlock Text="Chọn ngày tiêm:" VerticalAlignment="Center"/>
+                        <DatePicker x:Name="dpVaccineFilterDate" Width="150" Margin="5"/>
+
+                        <Button Content="Thống kê"
+                                Width="100"
+                                Click="CountVaccineByDate_Click"/>
+
+                        <Button Content="Hôm nay"
+                                Width="90"
+                                Margin="5"
+                                Click="CountVaccineToday_Click"/>
+
+                        <TextBlock x:Name="txtVaccineResult"
+                                   FontWeight="Bold"
+                                   Foreground="Green"
+                                   Margin="15 0 0 0"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- DATA -->
+                    <DataGrid x:Name="dgVaccines"
+                              Grid.Row="3"
+                              AutoGenerateColumns="False"
+                              CanUserAddRows="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Thú cưng" Binding="{Binding Pet}"/>
+                            <DataGridTextColumn Header="Vắc-xin" Binding="{Binding VaccineName}"/>
+                            <DataGridTextColumn Header="Ngày tiêm" Binding="{Binding Date}"/>
+                            <DataGridTextColumn Header="Hạn tiếp theo" Binding="{Binding NextDueDate}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+    </Grid>
+</Window>
