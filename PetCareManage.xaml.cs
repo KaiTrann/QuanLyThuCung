@@ -10,7 +10,7 @@ namespace Nhóm_7
         private ObservableCollection<Pet> pets = new ObservableCollection<Pet>();
         private ObservableCollection<Pet> petsView = new ObservableCollection<Pet>();
 
-        public MainWindow()
+        public PetCareManage()
         {
             InitializeComponent();
             dgPets.ItemsSource = petsView;
