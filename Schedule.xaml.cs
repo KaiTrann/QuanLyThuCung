@@ -6,12 +6,12 @@ using System.Windows.Controls;
 
 namespace Nhóm_7
 {
-    public partial class MainWindow : Window
+    public partial class Schedule : Window
     {
         List<Appointment> appointments = new List<Appointment>();
         List<Vaccine> vaccines = new List<Vaccine>();
 
-        public MainWindow()
+        public Schedule()
         {
             InitializeComponent();
 
@@ -264,5 +264,20 @@ namespace Nhóm_7
             dpVaccineDate.SelectedDate = null;
             dpNextDueDate.SelectedDate = null;
         }
+    }
+    public class Appointment
+    {
+        public string Pet { get; set; }
+        public DateTime Date { get; set; }
+        public string Reason { get; set; }
+        public string Status { get; set; }
+    }
+
+    public class Vaccine
+    {
+        public string Pet { get; set; }
+        public string VaccineName { get; set; }
+        public DateTime Date { get; set; }
+        public DateTime NextDueDate { get; set; }
     }
 }
