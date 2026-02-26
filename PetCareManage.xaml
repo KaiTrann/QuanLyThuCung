@@ -1,4 +1,4 @@
-﻿<Window x:Class="PetsForm.MainWindow"
+﻿<Window x:Class="Nhóm_7.PetCareManage"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Quản lý Thú cưng"
