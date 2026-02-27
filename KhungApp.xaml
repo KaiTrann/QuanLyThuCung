@@ -1,0 +1,192 @@
+﻿<Window x:Class="Nhóm_7.KhungApp"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Quản Lý Thú Cưng"
+        Width="1200" Height="760"
+        WindowStartupLocation="CenterScreen"
+        Background="#F6F7FB"
+        FontFamily="Segoe UI"
+        FontSize="14">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="BgBrush" Color="#F6F7FB"/>
+        <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="StrokeBrush" Color="#E6E8F0"/>
+        <SolidColorBrush x:Key="TextBrush" Color="#111827"/>
+        <SolidColorBrush x:Key="Text2Brush" Color="#6B7280"/>
+        <SolidColorBrush x:Key="AccentBrush" Color="#6D28D9"/>
+
+        <DropShadowEffect x:Key="SoftShadow"
+                          BlurRadius="18"
+                          ShadowDepth="4"
+                          Opacity="0.10"
+                          Color="#000000"/>
+
+        <Style x:Key="AppTitle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <Style x:Key="AppSub" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource Text2Brush}"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+
+        <Style x:Key="NavButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Margin" Value="12,6,12,0"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Root" CornerRadius="12" Background="{TemplateBinding Background}">
+                            <Grid Margin="10,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="28"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0"
+                                           FontFamily="Segoe MDL2 Assets"
+                                           Text="{TemplateBinding Tag}"
+                                           Foreground="{StaticResource Text2Brush}"
+                                           FontSize="16"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+
+                                <ContentPresenter Grid.Column="2"
+                                                  VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#F2F3F8"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#EDEFFC"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SearchBoxBorder" TargetType="Border">
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="Background" Value="#F6F7FB"/>
+            <Setter Property="BorderBrush" Value="{StaticResource StrokeBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,8"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Background="{StaticResource BgBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="280"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Sidebar -->
+        <Border Grid.Column="0"
+                Background="{StaticResource SurfaceBrush}"
+                BorderBrush="{StaticResource StrokeBrush}"
+                BorderThickness="0,0,1,0">
+            <DockPanel>
+
+                <!-- Brand -->
+                <Border DockPanel.Dock="Top"
+                        Padding="18"
+                        BorderBrush="{StaticResource StrokeBrush}"
+                        BorderThickness="0,0,0,1">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="38" Height="38" CornerRadius="12" Background="{StaticResource AccentBrush}">
+                                <TextBlock Text="G7"
+                                           Foreground="White"
+                                           FontSize="14"
+                                           FontWeight="Bold"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Margin="12,13,0,0">
+                                <TextBlock Text="Quản Lý Thú Cưng" Style="{StaticResource AppTitle}" Height="38"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Menu -->
+                <StackPanel Margin="0,10,0,0">
+                    <Button Style="{StaticResource NavButtonStyle}" Content="Tổng quan" Tag="" Command="{Binding ShowDashboardCommand}"/>
+                    <Button Style="{StaticResource NavButtonStyle}" Content="Quản lý thú cưng" Tag="" Command="{Binding ShowPetsCommand}"/>
+                    <Button Style="{StaticResource NavButtonStyle}" Content="Quản lý chủ nuôi" Tag="" Command="{Binding ShowOwnersCommand}"/>
+                    <Button Style="{StaticResource NavButtonStyle}" Content="Lịch hẹn/Tiêm phòng" Tag="" Command="{Binding ShowAppointmentsCommand}"/>
+                </StackPanel>
+
+            </DockPanel>
+        </Border>
+
+        <!-- Main -->
+        <Grid Grid.Column="1" Margin="22,18,22,18">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="72"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Topbar -->
+            <Border Grid.Row="0"
+                    Background="{StaticResource SurfaceBrush}"
+                    BorderBrush="{StaticResource StrokeBrush}"
+                    BorderThickness="1"
+                    CornerRadius="18"
+                    Padding="18"
+                    Effect="{StaticResource SoftShadow}">
+
+                <Grid>
+                    <Border Style="{StaticResource SearchBoxBorder}"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Width="760">
+                        <DockPanel>
+                            <TextBlock Text=""
+                                       FontFamily="Segoe MDL2 Assets"
+                                       Foreground="{StaticResource Text2Brush}"
+                                       Margin="0,0,10,0"
+                                       VerticalAlignment="Center"
+                                       FontSize="14"/>
+
+                            <TextBox BorderThickness="0"
+                                     Background="Transparent"
+                                     Height="17"
+                                     FontSize="13"
+                                     Foreground="{StaticResource TextBrush}"
+                                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                     KeyDown="SearchBox_KeyDown"
+                                     ToolTip="Tìm nhanh..."
+                                     Padding="0,0,0,0"
+                                     VerticalContentAlignment="Center"
+                                     CaretBrush="{StaticResource AccentBrush}"/>
+                        </DockPanel>
+                    </Border>
+                </Grid>
+
+            </Border>
+
+            <!-- Content (mũi tên vàng chỉ vào đây) -->
+            <ContentControl Grid.Row="1"
+                            Margin="0,16,0,0"
+                            Content="{Binding CurrentView}"/>
+        </Grid>
+    </Grid>
+</Window>
