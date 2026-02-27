@@ -1,5 +1,5 @@
 ﻿using System;
-using MySql.Data.MySqlClient;
+using System.Data.SqlClient;
 
 namespace Nhóm_7
 {
@@ -19,13 +19,13 @@ namespace Nhóm_7
             return (obj == null || obj == DBNull.Value) ? 0 : Convert.ToInt32(obj);
         }
 
-        // Đếm lịch hẹn sắp tới (>= hôm nay)
         public int CountUpcomingAppointments()
         {
             const string sql = @"
             SELECT COUNT(*)
             FROM appointments
-            WHERE appointment_date >= CURDATE();";
+            WHERE appointment_date >= CAST(GETDATE() AS date);";
+
             object obj = Db.Scalar(sql);
             return (obj == null || obj == DBNull.Value) ? 0 : Convert.ToInt32(obj);
         }

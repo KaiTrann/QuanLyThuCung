@@ -1,24 +1,32 @@
-﻿using MySql.Data.MySqlClient;
+﻿using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace Nhóm_7
 {
     public static class Db
     {
-        private const string ConnStr =
-            "Server=localhost;Port=3307;Database=nhom7;Uid=khanh;Pwd=123456;";
-
-        private static MySqlCommand Create(string sql, MySqlConnection conn, MySqlParameter[] p)
+        private static string ConnStr
         {
-            var cmd = new MySqlCommand(sql, conn);
-            if (p != null && p.Length > 0)
-                cmd.Parameters.AddRange(p);
+            get
+            {
+                var cs = ConfigurationManager.ConnectionStrings["QuanLyThuCungDb"]?.ConnectionString;
+                return string.IsNullOrWhiteSpace(cs)
+                    ? throw new ConfigurationErrorsException("Thiếu connectionStrings/QuanLyThuCungDb trong App.config")
+                    : cs;
+            }
+        }
+
+        private static SqlCommand Create(string sql, SqlConnection conn, SqlParameter[] p)
+        {
+            var cmd = new SqlCommand(sql, conn);
+            if (p != null && p.Length > 0) cmd.Parameters.AddRange(p);
             return cmd;
         }
 
-        public static DataTable Query(string sql, params MySqlParameter[] p)
+        public static DataTable Query(string sql, params SqlParameter[] p)
         {
-            using (var conn = new MySqlConnection(ConnStr))
+            using (var conn = new SqlConnection(ConnStr))
             {
                 conn.Open();
                 using (var cmd = Create(sql, conn, p))
@@ -31,9 +39,9 @@ namespace Nhóm_7
             }
         }
 
-        public static int Execute(string sql, params MySqlParameter[] p)
+        public static int Execute(string sql, params SqlParameter[] p)
         {
-            using (var conn = new MySqlConnection(ConnStr))
+            using (var conn = new SqlConnection(ConnStr))
             {
                 conn.Open();
                 using (var cmd = Create(sql, conn, p))
@@ -41,9 +49,9 @@ namespace Nhóm_7
             }
         }
 
-        public static object Scalar(string sql, params MySqlParameter[] p)
+        public static object Scalar(string sql, params SqlParameter[] p)
         {
-            using (var conn = new MySqlConnection(ConnStr))
+            using (var conn = new SqlConnection(ConnStr))
             {
                 conn.Open();
                 using (var cmd = Create(sql, conn, p))

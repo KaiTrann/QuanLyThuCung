@@ -1,6 +1,6 @@
-﻿using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -43,7 +43,6 @@ namespace Nhóm_7
         private bool ValidateInput(out string fullName)
         {
             fullName = (txtFullName.Text ?? "").Trim();
-
             if (string.IsNullOrWhiteSpace(fullName))
             {
                 MessageBox.Show("Vui lòng nhập Họ tên.", "Thiếu dữ liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -87,7 +86,6 @@ namespace Nhóm_7
             try
             {
                 repo.Insert(fullName, phone, address);
-
                 MessageBox.Show("Thêm chủ nuôi thành công!", "OK", MessageBoxButton.OK, MessageBoxImage.Information);
                 ClearForm();
                 LoadOwners();
@@ -102,8 +100,7 @@ namespace Nhóm_7
         {
             if (_selectedOwnerId <= 0)
             {
-                MessageBox.Show("Bạn chưa chọn chủ nuôi để sửa (click 1 dòng trong bảng).",
-                                "Thiếu chọn dòng", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Bạn chưa chọn chủ nuôi để sửa (click 1 dòng trong bảng).", "Thiếu chọn dòng", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -118,8 +115,7 @@ namespace Nhóm_7
                 var n = repo.Update(_selectedOwnerId, fullName, phone, address);
                 if (n == 0)
                 {
-                    MessageBox.Show("Không tìm thấy bản ghi để cập nhật.", "Warning",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("Không tìm thấy bản ghi để cập nhật.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
@@ -137,31 +133,29 @@ namespace Nhóm_7
         {
             if (_selectedOwnerId <= 0)
             {
-                MessageBox.Show("Bạn chưa chọn chủ nuôi để xóa (click 1 dòng trong bảng).",
-                                "Thiếu chọn dòng", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Bạn chưa chọn chủ nuôi để xóa (click 1 dòng trong bảng).", "Thiếu chọn dòng", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            var ok = MessageBox.Show("Bạn chắc chắn muốn xóa Owner ID = " + _selectedOwnerId + " ?",
-                                     "Xác nhận xóa",
-                                     MessageBoxButton.YesNo,
-                                     MessageBoxImage.Warning);
-
+            var ok = MessageBox.Show("Bạn chắc chắn muốn xóa Owner ID = " + _selectedOwnerId + " ?", "Xác nhận xóa", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (ok != MessageBoxResult.Yes) return;
 
             try
             {
                 repo.Delete(_selectedOwnerId);
-
                 MessageBox.Show("Đã xóa!", "OK", MessageBoxButton.OK, MessageBoxImage.Information);
                 ClearForm();
                 LoadOwners();
             }
-            catch (MySqlException ex) when (ex.Number == 1451)
+            catch (SqlException ex) when (ex.Number == 547)
             {
-                MessageBox.Show("Không thể xóa vì Owner đang liên kết với Pets.\n" +
-                                "Hãy xóa Pets trước hoặc chỉnh FK ON DELETE SET NULL/CASCADE.",
-                                "Ràng buộc khóa ngoại", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(
+                    "Không thể xóa vì Owner đang liên kết với Pets.\n" +
+                    "Hãy xóa Pets trước hoặc chỉnh FK ON DELETE SET NULL/CASCADE.",
+                    "Ràng buộc khóa ngoại",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning
+                );
             }
             catch (Exception ex)
             {

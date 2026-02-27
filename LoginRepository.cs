@@ -1,6 +1,6 @@
-﻿using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace Nhóm_7
 {
@@ -18,20 +18,19 @@ namespace Nhóm_7
         public LoginResult CheckLogin(string username, string password)
         {
             const string sql =
-                "SELECT user_id, username, full_name, role, is_active " +
+                "SELECT TOP 1 user_id, username, full_name, role, is_active " +
                 "FROM users " +
-                "WHERE username=@u AND password_hash=@p " +
-                "LIMIT 1;";
+                "WHERE username=@u AND password_hash=@p;";
 
-            DataTable dt = Db.Query(sql,
-                new MySqlParameter("@u", username),
-                new MySqlParameter("@p", password)
+            DataTable dt = Db.Query(
+                sql,
+                new SqlParameter("@u", username),
+                new SqlParameter("@p", password)
             );
 
             if (dt.Rows.Count == 0) return null;
 
             var row = dt.Rows[0];
-
             return new LoginResult
             {
                 UserId = Convert.ToInt32(row["user_id"]),
