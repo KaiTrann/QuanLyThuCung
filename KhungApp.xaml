@@ -6,7 +6,8 @@
         WindowStartupLocation="CenterScreen"
         Background="#F6F7FB"
         FontFamily="Segoe UI"
-        FontSize="14">
+        FontSize="14"
+        Loaded="Window_Loaded">
 
     <Window.Resources>
         <SolidColorBrush x:Key="BgBrush" Color="#F6F7FB"/>
@@ -89,6 +90,60 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="12,8"/>
         </Style>
+
+        <!-- User menu button style -->
+        <Style x:Key="UserIconButton" TargetType="ToggleButton">
+            <Setter Property="Width" Value="44"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="R" CornerRadius="14" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="R" Property="Opacity" Value="0.93"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="R" Property="Opacity" Value="0.86"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="MenuBtn" TargetType="Button">
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="B" CornerRadius="10" Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="B" Property="Background" Value="#F2F3F8"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="B" Property="Background" Value="#EDEFFC"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <Grid Background="{StaticResource BgBrush}">
@@ -111,13 +166,26 @@
                         BorderThickness="0,0,0,1">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Border Width="38" Height="38" CornerRadius="12" Background="{StaticResource AccentBrush}">
-                                <TextBlock Text="G7"
-                                           Foreground="White"
-                                           FontSize="14"
-                                           FontWeight="Bold"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center"/>
+                            <Border Width="47"
+                        Height="42"
+                        CornerRadius="12"
+                        Background="{StaticResource AccentBrush}"
+                        ClipToBounds="True">
+                                <Grid>
+                                    <!-- LOGO ẢNH (nếu có Assets/logo.png) -->
+                                    <Image x:Name="imgAppLogo"
+                                           Source="pack://application:,,,/Assets/logo.jpg"
+                                           Stretch="UniformToFill" Margin="-21,-4,-2.8,-3.4" HorizontalAlignment="Right" Width="71"/>
+                                    <!-- FALLBACK TEXT (nếu ảnh load fail hoặc chưa có) -->
+                                    <TextBlock x:Name="txtSideAvatar"
+                                               Text="G7"
+                                               Foreground="White"
+                                               FontSize="14"
+                                               FontWeight="Bold"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Panel.ZIndex="1"/>
+                                </Grid>
                             </Border>
                             <StackPanel Margin="12,13,0,0">
                                 <TextBlock Text="Quản Lý Thú Cưng" Style="{StaticResource AppTitle}" Height="38"/>
@@ -154,7 +222,14 @@
                     Effect="{StaticResource SoftShadow}">
 
                 <Grid>
-                    <Border Style="{StaticResource SearchBoxBorder}"
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Search -->
+                    <Border Grid.Column="0"
+                            Style="{StaticResource SearchBoxBorder}"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Center"
                             Width="760">
@@ -179,11 +254,49 @@
                                      CaretBrush="{StaticResource AccentBrush}"/>
                         </DockPanel>
                     </Border>
+
+                    <!-- User menu -->
+                    <Grid Grid.Column="1" VerticalAlignment="Center">
+                        <ToggleButton x:Name="btnUserMenu"
+                                      Style="{StaticResource UserIconButton}"
+                                      Content="U" Height="Auto" Margin="0,-26,0,-19"/>
+
+                        <Popup PlacementTarget="{Binding ElementName=btnUserMenu}"
+                               Placement="Bottom"
+                               StaysOpen="False"
+                               IsOpen="{Binding IsChecked, ElementName=btnUserMenu}">
+                            <Border Background="White"
+                                    BorderBrush="{StaticResource StrokeBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="14"
+                                    Padding="12"
+                                    Effect="{StaticResource SoftShadow}">
+                                <StackPanel Width="230">
+                                    <TextBlock Text="Tài khoản"
+                                               FontWeight="Bold"
+                                               Foreground="{StaticResource TextBrush}"
+                                               FontSize="14"/>
+                                    <TextBlock x:Name="txtTopUser"
+                                               Text="username"
+                                               Foreground="{StaticResource Text2Brush}"
+                                               FontSize="12"
+                                               Margin="0,2,0,10"/>
+
+                                    <Button Style="{StaticResource MenuBtn}" Content="Thông tin tài khoản" Click="BtnProfile_Click"/>
+                                    <Button Style="{StaticResource MenuBtn}" Content="Đổi mật khẩu" Margin="0,6,0,0" Click="BtnChangePassword_Click"/>
+
+                                    <Border Height="1" Background="{StaticResource StrokeBrush}" Margin="0,10,0,10"/>
+
+                                    <Button Style="{StaticResource MenuBtn}" Content="Đăng xuất" Click="BtnLogout_Click"/>
+                                </StackPanel>
+                            </Border>
+                        </Popup>
+                    </Grid>
                 </Grid>
 
             </Border>
 
-            <!-- Content (mũi tên vàng chỉ vào đây) -->
+            <!-- Content -->
             <ContentControl Grid.Row="1"
                             Margin="0,16,0,0"
                             Content="{Binding CurrentView}"/>

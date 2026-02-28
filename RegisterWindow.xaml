@@ -1,0 +1,173 @@
+﻿<Window x:Class="Nhóm_7.RegisterWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Đăng ký"
+        Width="480"
+        Height="560"
+        WindowStartupLocation="CenterOwner"
+        Background="#F6F7FB"
+        FontFamily="Segoe UI"
+        ResizeMode="NoResize">
+
+    <Window.Resources>
+        <Color x:Key="Stroke">#E6E8F0</Color>
+        <Color x:Key="Text">#111827</Color>
+        <Color x:Key="Text2">#6B7280</Color>
+        <Color x:Key="Accent">#6D28D9</Color>
+
+        <SolidColorBrush x:Key="StrokeBrush" Color="{StaticResource Stroke}"/>
+        <SolidColorBrush x:Key="TextBrush" Color="{StaticResource Text}"/>
+        <SolidColorBrush x:Key="Text2Brush" Color="{StaticResource Text2}"/>
+        <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource Accent}"/>
+
+        <DropShadowEffect x:Key="SoftShadow"
+                          BlurRadius="18"
+                          ShadowDepth="4"
+                          Opacity="0.10"
+                          Color="#000000"/>
+
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="18"/>
+            <Setter Property="Padding" Value="24"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="{StaticResource StrokeBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Effect" Value="{StaticResource SoftShadow}"/>
+        </Style>
+
+        <Style x:Key="AccentButton" TargetType="Button">
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="R" CornerRadius="14" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="R" Property="Opacity" Value="0.93"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="R" Property="Opacity" Value="0.86"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="InputBox" TargetType="Border">
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="Background" Value="#F6F7FB"/>
+            <Setter Property="BorderBrush" Value="{StaticResource StrokeBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+    </Window.Resources>
+
+    <Grid Margin="22">
+        <Border Style="{StaticResource CardStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Title -->
+                <StackPanel>
+                    <TextBlock Text="Đăng ký tài khoản"
+                               FontSize="22"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextBrush}"/>
+
+                    <TextBlock Text="Tạo tài khoản mới để sử dụng hệ thống."
+                               Margin="0,6,0,0"
+                               FontSize="12"
+                               Foreground="{StaticResource Text2Brush}"/>
+                </StackPanel>
+
+                <!-- Form -->
+                <ScrollViewer Grid.Row="2"
+                              VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <!-- Họ và tên -->
+                        <TextBlock Text="Họ và tên"
+                                   Foreground="{StaticResource Text2Brush}"
+                                   FontSize="12"
+                                   Margin="2,14,0,6"/>
+                        <Border Style="{StaticResource InputBox}">
+                            <TextBox x:Name="txtFullName"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 Height="26"/>
+                        </Border>
+                        <!-- Username -->
+                        <TextBlock Text="Tên đăng nhập"
+                                   Foreground="{StaticResource Text2Brush}"
+                                   FontSize="12"
+                                   Margin="2,0,0,6"/>
+                        <Border Style="{StaticResource InputBox}">
+                            <TextBox x:Name="txtUsername"
+                                     BorderThickness="0"
+                                     Background="Transparent"
+                                     Height="26"/>
+                        </Border>
+
+                        <!-- Password -->
+                        <TextBlock Text="Mật khẩu"
+                                   Foreground="{StaticResource Text2Brush}"
+                                   FontSize="12"
+                                   Margin="2,14,0,6"/>
+                        <Border Style="{StaticResource InputBox}">
+                            <PasswordBox x:Name="txtPassword"
+                                         BorderThickness="0"
+                                         Background="Transparent"
+                                         Height="26"/>
+                        </Border>
+
+                        <!-- Confirm -->
+                        <TextBlock Text="Nhập lại mật khẩu"
+                                   Foreground="{StaticResource Text2Brush}"
+                                   FontSize="12"
+                                   Margin="2,14,0,6"/>
+                        <Border Style="{StaticResource InputBox}">
+                            <PasswordBox x:Name="txtConfirm"
+                                         BorderThickness="0"
+                                         Background="Transparent"
+                                         Height="26"/>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- Buttons -->
+                <StackPanel Grid.Row="4">
+
+                    <Button Style="{StaticResource AccentButton}"
+                            Content="Đăng ký"
+                            Click="BtnRegister_Click"/>
+
+                    <Button Margin="0,10,0,0"
+                            Style="{StaticResource AccentButton}"
+                            Background="#F6F7FB"
+                            Foreground="{StaticResource AccentBrush}"
+                            BorderBrush="{StaticResource StrokeBrush}"
+                            BorderThickness="1"
+                            Content="Hủy"
+                            Click="BtnCancel_Click"/>
+                </StackPanel>
+
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

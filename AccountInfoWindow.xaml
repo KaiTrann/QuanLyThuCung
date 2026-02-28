@@ -1,0 +1,87 @@
+﻿<Window x:Class="Nhóm_7.AccountInfoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Thông tin tài khoản"
+        Width="520" Height="360"
+        WindowStartupLocation="CenterOwner"
+        Background="#F6F7FB"
+        FontFamily="Segoe UI"
+        ResizeMode="NoResize">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="StrokeBrush" Color="#E6E8F0"/>
+        <SolidColorBrush x:Key="TextBrush" Color="#111827"/>
+        <SolidColorBrush x:Key="Text2Brush" Color="#6B7280"/>
+        <SolidColorBrush x:Key="AccentBrush" Color="#6D28D9"/>
+        <DropShadowEffect x:Key="SoftShadow" BlurRadius="18" ShadowDepth="4" Opacity="0.10" Color="#000000"/>
+
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="18"/>
+            <Setter Property="Padding" Value="18"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="{StaticResource StrokeBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Effect" Value="{StaticResource SoftShadow}"/>
+        </Style>
+
+        <Style x:Key="RowLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource Text2Brush}"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+        </Style>
+
+        <Style x:Key="RowValue" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,14"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Border Style="{StaticResource CardStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="12"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel>
+                    <TextBlock Text="Thông tin tài khoản"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextBrush}"/>
+                    <TextBlock Text="Xem thông tin tài khoản đang đăng nhập."
+                               Margin="0,4,0,0"
+                               FontSize="12"
+                               Foreground="{StaticResource Text2Brush}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2">
+                    <TextBlock Style="{StaticResource RowLabel}" Text="Họ tên"/>
+                    <TextBlock x:Name="txtFullName" Style="{StaticResource RowValue}" Text="—"/>
+
+                    <TextBlock Style="{StaticResource RowLabel}" Text="Tên tài khoản"/>
+                    <TextBlock x:Name="txtUsername" Style="{StaticResource RowValue}" Text="—"/>
+
+                    <TextBlock Style="{StaticResource RowLabel}" Text="Thời gian tạo"/>
+                    <TextBlock x:Name="txtCreatedAt" Style="{StaticResource RowValue}" Text="—"/>
+                </StackPanel>
+
+                <Button Grid.Row="3"
+                        Width="120"
+                        Height="40"
+                        HorizontalAlignment="Right"
+                        Background="#F6F7FB"
+                        BorderBrush="{StaticResource StrokeBrush}"
+                        BorderThickness="1"
+                        Foreground="{StaticResource AccentBrush}"
+                        FontWeight="SemiBold"
+                        Content="Đóng"
+                        Click="BtnClose_Click"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

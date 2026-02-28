@@ -14,6 +14,35 @@ namespace Nhóm_7
         {
             InitializeComponent();
             DataContext = new KhungAppViewModel();
+
+            ThemeManager.Apply(Session.IsDarkTheme);
+
+            // Hiện user lên avatar/menu
+            var u = string.IsNullOrWhiteSpace(Session.Username) ? "U" : Session.Username.Substring(0, 1).ToUpper();
+            btnUserMenu.Content = u;
+            txtSideAvatar.Text = u;
+
+            var display = !string.IsNullOrWhiteSpace(Session.FullName)
+                ? $"{Session.FullName} ({Session.Username})"
+                : (Session.Username ?? "User");
+
+            txtTopUser.Text = display;
+        }
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Nếu logo load OK => ẩn chữ G7
+                if (imgAppLogo?.Source != null)
+                    txtSideAvatar.Visibility = Visibility.Collapsed;
+                else
+                    txtSideAvatar.Visibility = Visibility.Visible;
+            }
+            catch
+            {
+                // Nếu có lỗi gì thì cứ để chữ hiện
+                txtSideAvatar.Visibility = Visibility.Visible;
+            }
         }
 
         private void SearchBox_KeyDown(object sender, KeyEventArgs e)
@@ -26,10 +55,66 @@ namespace Nhóm_7
             var key = (vm.SearchText ?? "").Trim();
             if (key.Length == 0) return;
 
+            // Cái này bạn đang mở Window riêng (OK)
             if (key.Any(char.IsDigit))
                 new OwnersWindow(key) { Owner = this }.Show();
             else
                 new PetCareManage(key) { Owner = this }.Show();
+        }
+
+        // ====== User menu handlers ======
+        private void BtnProfile_Click(object sender, RoutedEventArgs e)
+        {
+            var w = new AccountInfoWindow { Owner = this };
+            w.ShowDialog();
+        }
+
+        private void BtnChangePassword_Click(object sender, RoutedEventArgs e)
+        {
+            var w = new ChangePasswordWindow { Owner = this };
+            w.ShowDialog();
+        }
+
+
+        // ✅ Hàm áp theme cho KhungApp (SettingsWindow sẽ gọi)
+        public void ApplyTheme(bool dark)
+        {
+            if (dark)
+            {
+                Resources["BgBrush"] = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Color.FromRgb(0x0F, 0x12, 0x1A)); // gần #0F121A
+                Resources["SurfaceBrush"] = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Color.FromRgb(0x15, 0x1A, 0x24));
+                Resources["StrokeBrush"] = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Color.FromRgb(0x25, 0x2B, 0x38));
+                Resources["TextBrush"] = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Color.FromRgb(0xF3, 0xF4, 0xF6));
+                Resources["Text2Brush"] = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Color.FromRgb(0xA3, 0xA9, 0xB7));
+            }
+            else
+            {
+                Resources["BgBrush"] = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Color.FromRgb(0xF6, 0xF7, 0xFB));
+                Resources["SurfaceBrush"] = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Colors.White);
+                Resources["StrokeBrush"] = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Color.FromRgb(0xE6, 0xE8, 0xF0));
+                Resources["TextBrush"] = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Color.FromRgb(0x11, 0x18, 0x27));
+                Resources["Text2Brush"] = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Color.FromRgb(0x6B, 0x72, 0x80));
+            }
+        }
+
+        private void BtnLogout_Click(object sender, RoutedEventArgs e)
+        {
+            Session.Clear();
+
+            var login = new Login();
+            Application.Current.MainWindow = login;
+            login.Show();
+            this.Close();
         }
     }
 
@@ -65,6 +150,8 @@ namespace Nhóm_7
                 CurrentView = dashboard;
             });
 
+            // Nếu mấy cái dưới là WINDOW thì bạn vẫn Show().
+            // Nếu bạn có UserControl tương ứng thì thay bằng CurrentView = new ...View();
             ShowPetsCommand = new RelayCommand(_ =>
             {
                 new PetCareManage().Show();
@@ -113,7 +200,7 @@ namespace Nhóm_7
         }
     }
 
-    // ======================= DASHBOARD VIEW (NẰM TRONG KHUNG APP) =======================
+    // ======================= DASHBOARD VIEW =======================
     public class DashboardView : UserControl
     {
         private readonly DashboardRepository _repo = new DashboardRepository();
@@ -209,4 +296,5 @@ namespace Nhóm_7
             return b;
         }
     }
+
 }

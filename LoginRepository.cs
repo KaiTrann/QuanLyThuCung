@@ -40,5 +40,27 @@ namespace Nhóm_7
                 IsActive = Convert.ToInt32(row["is_active"])
             };
         }
+        public bool UsernameExists(string username)
+        {
+            var obj = Db.Scalar(
+                "SELECT COUNT(*) FROM dbo.[users] WHERE username=@u",
+                new SqlParameter("@u", username)
+            );
+            return Convert.ToInt32(obj) > 0;
+        }
+
+        public bool Register(string username, string password, string fullName, string role)
+        {
+            int rows = Db.Execute(@"
+                INSERT INTO dbo.[users] (username,password_hash,full_name,role,is_active,created_at)
+                VALUES (@u,@p,@f,@r,1,GETDATE())",
+                new SqlParameter("@u", username),
+                new SqlParameter("@p", password),
+                new SqlParameter("@f", string.IsNullOrWhiteSpace(fullName) ? (object)DBNull.Value : fullName),
+                new SqlParameter("@r", role)
+            );
+
+            return rows == 1;
+        }
     }
 }

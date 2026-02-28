@@ -1,21 +1,32 @@
 ﻿using System;
+using System.Data;
+using System.Data.SqlClient;
 using System.Windows;
 
 namespace Nhóm_7
 {
     public partial class Login : Window
     {
-        private readonly LoginRepository repo = new LoginRepository();
-
         public Login()
         {
             InitializeComponent();
-            txtMessage.Text = "Vui lòng nhập tài khoản.";
+            // Nếu logo có load được thì ẩn icon fallback
+            try
+            {
+                if (imgLoginLogo?.Source != null)
+                    txtLoginFallbackIcon.Visibility = Visibility.Collapsed;
+                else
+                    txtLoginFallbackIcon.Visibility = Visibility.Visible;
+            }
+            catch
+            {
+                txtLoginFallbackIcon.Visibility = Visibility.Visible;
+            }
         }
 
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
-            var username = txtUsername.Text?.Trim();
+            var username = (txtUsername.Text ?? "").Trim();
             var password = pbPassword.Password ?? "";
 
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
@@ -26,31 +37,68 @@ namespace Nhóm_7
 
             try
             {
-                var result = repo.CheckLogin(username, password);
+                var dt = Db.Query(
+                    "SELECT TOP 1 user_id, username, full_name, role, is_active, created_at " +
+                    "FROM dbo.[users] " +
+                    "WHERE username = @u AND password_hash = @p",
+                    new SqlParameter("@u", SqlDbType.NVarChar) { Value = username },
+                    new SqlParameter("@p", SqlDbType.NVarChar) { Value = password }
+                );
 
-                if (result == null)
+                if (dt.Rows.Count == 0)
                 {
                     txtMessage.Text = "Sai tài khoản hoặc mật khẩu.";
                     return;
                 }
 
-                if (result.IsActive != 1)
+                var row = dt.Rows[0];
+                var isActive = Convert.ToInt32(row["is_active"]) == 1;
+                if (!isActive)
                 {
                     txtMessage.Text = "Tài khoản đang bị khóa.";
                     return;
                 }
 
-                string fullName = string.IsNullOrWhiteSpace(result.FullName) ? result.Username : result.FullName;
-                string role = result.Role ?? "";
+                // ✅ Lưu session
+                int userId = Convert.ToInt32(row["user_id"]);
+                string un = row["username"]?.ToString();
+                string fn = row["full_name"] == DBNull.Value ? "" : row["full_name"].ToString();
+                string role = row["role"] == DBNull.Value ? "" : row["role"].ToString();
+                DateTime? createdAt = row["created_at"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(row["created_at"]);
 
-                // Mở KhungApp
-                var home = new KhungApp();
-                home.Show();
-                this.Close();
+                Session.Set(userId, un, fn, role, createdAt);
+
+                // ✅ mở dashboard (không MessageBox)
+                var dash = new KhungApp();
+                Application.Current.MainWindow = dash;
+                dash.Show();
+
+                Close();
             }
             catch (Exception ex)
             {
-                txtMessage.Text = "Lỗi kết nối/SQL: " + ex.Message;
+                txtMessage.Text = "Can't connect to SQL / Lỗi DB: " + ex.Message;
+            }
+        }
+
+        private void BtnRegister_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var reg = new RegisterWindow { Owner = this };
+                var result = reg.ShowDialog();
+
+                if (result == true && !string.IsNullOrWhiteSpace(reg.RegisteredUsername))
+                {
+                    txtUsername.Text = reg.RegisteredUsername;
+                    pbPassword.Clear();
+                    pbPassword.Focus();
+                    txtMessage.Text = "Đăng ký thành công. Hãy đăng nhập.";
+                }
+            }
+            catch (Exception ex)
+            {
+                txtMessage.Text = "Không mở được form đăng ký: " + ex.Message;
             }
         }
     }
