@@ -81,6 +81,13 @@ namespace Nhóm_7
             if (!ValidateInput(out fullName)) return;
 
             var phone = (txtPhone.Text ?? "").Trim();
+            if (string.IsNullOrWhiteSpace(phone))
+            {
+                MessageBox.Show("Điền Số Điện Thoại.", "Thiếu dữ liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
+                txtPhone.Focus();
+                return;
+            }
+
             var address = (txtAddress.Text ?? "").Trim();
 
             try
@@ -100,7 +107,7 @@ namespace Nhóm_7
         {
             if (_selectedOwnerId <= 0)
             {
-                MessageBox.Show("Bạn chưa chọn chủ nuôi để sửa (click 1 dòng trong bảng).", "Thiếu chọn dòng", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Bạn chưa chọn chủ nuôi để sửa.", "Thiếu chọn dòng", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -108,6 +115,13 @@ namespace Nhóm_7
             if (!ValidateInput(out fullName)) return;
 
             var phone = (txtPhone.Text ?? "").Trim();
+            if (string.IsNullOrWhiteSpace(phone))
+            {
+                MessageBox.Show("Điền Số Điện Thoại.", "Thiếu dữ liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
+                txtPhone.Focus();
+                return;
+            }
+
             var address = (txtAddress.Text ?? "").Trim();
 
             try
