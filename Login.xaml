@@ -125,10 +125,6 @@
                         BorderThickness="1"
                         Padding="16">
                     <StackPanel>
-                        <TextBlock Text="• Tài khoản được cấp sẵn cho người dùng"
-                                   Foreground="{StaticResource Text2Brush}"
-                                   FontSize="12"
-                                   Margin="0,0,0,8"/>
                         <TextBlock Text="• Nếu quên mật khẩu, liên hệ quản trị"
                                    Foreground="{StaticResource Text2Brush}"
                                    FontSize="12"/>
@@ -161,7 +157,7 @@
 
                 <TextBlock Grid.Row="0"
                            Margin="0,34,0,0"
-                           Text="Nhập tài khoản được cấp để vào hệ thống."
+                           Text="Nhập tài khoản để vào hệ thống."
                            Foreground="{StaticResource Text2Brush}"
                            FontSize="12"/>
 
