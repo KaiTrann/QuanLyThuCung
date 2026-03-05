@@ -27,7 +27,9 @@ Chào mừng bạn đến với dự án Quản Lý Thú Cưng. Đây là ứng 
 1. Clone Project
 
 Mở Terminal hoặc Git Bash và chạy lệnh sau:
-2. Thiết lập Cơ sở dữ liệu ( Nếu chạy bị lỗi SQL ) Thường thì tải về build project là chạy được.
+
+2. Thiết lập Cơ sở dữ liệu 
+( Nếu chạy bị lỗi SQL ) Thường thì tải về build project là chạy được.
 
     Mở SQL Server Management Studio (SSMS).
 
