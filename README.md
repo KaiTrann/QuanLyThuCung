@@ -26,7 +26,7 @@ Chào mừng bạn đến với dự án Quản Lý Thú Cưng. Đây là ứng 
 🚀 Hướng dẫn cài đặt
 1. Clone Project
 
-Mở Terminal hoặc Git Bash và chạy lệnh sau:
+    Mở Terminal hoặc Git Bash và chạy lệnh sau:
 
 2. Thiết lập Cơ sở dữ liệu 
 ( Nếu chạy bị lỗi SQL ) Thường thì tải về build project là chạy được.
